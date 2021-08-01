@@ -10,7 +10,7 @@ part 'src/primary_page.dart';
 part 'src/secondary_page.dart';
 part 'utils/enums.dart';
 part 'utils/extensions.dart';
-part 'utils/inherted_ranger.dart';
+part 'src/inherted_ranger.dart';
 part 'utils/type_defs.dart';
 
 class DateRanger extends StatefulWidget {

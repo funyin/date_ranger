@@ -1,12 +1,12 @@
 import 'package:date_ranger/date_ranger.dart';
 import 'package:flutter/material.dart';
 
-class TestPack extends StatefulWidget {
+class Example extends StatefulWidget {
   @override
-  _TestPackState createState() => _TestPackState();
+  _ExampleState createState() => _ExampleState();
 }
 
-class _TestPackState extends State<TestPack> {
+class _ExampleState extends State<Example> {
   var initialDate = DateTime.now();
   var initialDateRange =
       DateTimeRange(start: DateTime.now(), end: DateTime.now());
