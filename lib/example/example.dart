@@ -29,6 +29,7 @@ class _TestPackState extends State<TestPack> {
   DateRanger singleDatePicker() {
     return DateRanger(
       initialDate: initialDate,
+      rangerType: DateRangerType.single,
       onRangeChanged: (range) {
         setState(() {
           initialDate = range.start;
