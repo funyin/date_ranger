@@ -1,4 +1,4 @@
-part of 'date_ranger.dart';
+part of '../date_ranger.dart';
 
 class PrimaryPage extends StatefulWidget {
   final Function(DateTime) onNewDate;

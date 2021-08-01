@@ -2,7 +2,9 @@
 
 A date picker for flutter apps to pick single dates and date ranges
 
-## Getting Started
+## Usage
+
+[Example] []
 
 This project is a starting point for a Dart
 [package](https://flutter.dev/developing-packages/),

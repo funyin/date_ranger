@@ -6,8 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-part 'primary_page.dart';
-part 'secondary_page.dart';
+part 'src/primary_page.dart';
+part 'src/secondary_page.dart';
 part 'utils/enums.dart';
 part 'utils/extensions.dart';
 part 'utils/inherted_ranger.dart';
