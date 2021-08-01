@@ -20,7 +20,14 @@ class _TestPackState extends State<TestPack> {
         Container(),
         Padding(
           padding: const EdgeInsets.all(24),
-          child: singleDatePicker() /*or  dateRangePicker() */,
+          child: DateRanger(
+            initialRange: initialDateRange,
+            onRangeChanged: (range) {
+              setState(() {
+                initialDateRange = range;
+              });
+            },
+          ),
         )
       ],
     ));

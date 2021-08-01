@@ -1,6 +1,9 @@
-# date_ranger
+# Date Ranger
 
 A date picker for flutter apps to pick single dates and date ranges
+
+![Demo gif](https://github.com/funyin/date_ranger/blob/master/assets/demo.gif?raw=true)
+![Single picker image](https://raw.githubusercontent.com/funyin/date_ranger/master/assets/single_picker.png)
 
 ## Usage
 
@@ -11,20 +14,53 @@ dependencies:
     sdk: flutter
   date_ranger: 
 ```
-[Example] (https://github.com/funyin/date_ranger/blob/master/lib/example/example.dart)
+
+[Example](https://github.com/funyin/date_ranger/blob/master/lib/example/example.dart)
+
+```dart
+import 'package:date_ranger/date_ranger.dart';
+import 'package:flutter/material.dart';
+
+class TestPack extends StatefulWidget {
+  @override
+  _TestPackState createState() => _TestPackState();
+}
+
+class _TestPackState extends State<TestPack> {
+  var initialDate = DateTime.now();
+  var initialDateRange =
+      DateTimeRange(start: DateTime.now(), end: DateTime.now());
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(),
+        Padding(
+          padding: const EdgeInsets.all(24),
+          child:  DateRanger(
+          initialRange: initialDateRange,
+          onRangeChanged: (range) {
+            setState(() {
+              initialDateRange = range;
+            });
+          },
+        ),
+        )
+      ],
+    ));
+  }
+}
+```
 
 
 ## Features
 * Layout-agnostic: Conforms to any width by calculating its height internally
 * Simple architecture: Built with default flutter architecture without depending on other state management packages
 * Highly customisable:  Almost every thing can be changed including dimensions since dimensions are adjusted internally
-* Picker types:  You can swap between a regular date picker and a date range picker easily. 
+* Picker types:  You can swap between a regular date picker and a date range picker easily.
 
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+***
+[![BuyMeAShawrma.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1619907239535/KqJOyu-70.png)](https://www.buymeacoffee.com/funyinkash) 
