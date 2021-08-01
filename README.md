@@ -2,8 +2,7 @@
 
 A date picker for flutter apps to pick single dates and date ranges
 
-![Demo gif](https://github.com/funyin/date_ranger/blob/master/assets/demo.gif?raw=true)
-![Single picker image](https://raw.githubusercontent.com/funyin/date_ranger/master/assets/single_picker.png)
+<img src="https://github.com/funyin/date_ranger/blob/master/assets/demo.gif?raw=true" height="350em"></img><img src="https://raw.githubusercontent.com/funyin/date_ranger/master/assets/single_picker.png" height="350em"></img>
 
 ## Usage
 
