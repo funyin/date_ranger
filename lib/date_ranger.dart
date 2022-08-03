@@ -91,6 +91,9 @@ class DateRanger extends StatefulWidget {
 
   final bool showDoubleTapInfo;
 
+  final int minYear;
+  final int maxYear;
+
   ///A date picker for selecting single dates and date ranges
   const DateRanger(
       {Key? key,
@@ -111,7 +114,7 @@ class DateRanger extends StatefulWidget {
       this.itemHeight = 32,
       this.runSpacing = 10,
       this.activeDateBottomSpace = 10,
-      this.showDoubleTapInfo = true})
+      this.showDoubleTapInfo = true, this.minYear = 1940, this.maxYear = 2100})
       : super(key: key);
 
   @override
@@ -139,7 +142,7 @@ class _DateRangerState extends State<DateRanger>
 
   @override
   void initState() {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       tabController.addListener(() {
         var index = tabController.index;
         activeTab.value = index;
@@ -240,6 +243,8 @@ class _DateRangerState extends State<DateRanger>
                   runSpacing: widget.runSpacing,
                   activeDateBottomSpace: widget.activeDateBottomSpace,
                   activeDateFontSize: widget.activeDateFontSize,
+                  minYear: widget.minYear,
+                  maxYear: widget.maxYear,
                   child: Navigator(
                     key: navKey,
                     onGenerateRoute: (settings) {

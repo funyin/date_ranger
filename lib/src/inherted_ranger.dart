@@ -13,23 +13,27 @@ class InheritedRanger extends InheritedWidget {
   final double activeDateBottomSpace;
   final double activeDateFontSize;
   final double itemWidth;
+  final int minYear;
+  final int maxYear;
 
-  InheritedRanger(
-      {Key? key,
-      required Widget child,
-      required this.activeYear,
-      required this.activeTab,
-      required this.tabController,
-      required this.dateRange,
-      required this.selectingStart,
-      required this.navKey,
-      required this.rangerType,
-      required this.itemHeight,
-      required this.runSpacing,
-      required this.activeDateBottomSpace,
-      required this.activeDateFontSize,
-      required this.itemWidth})
-      : super(child: child, key: key);
+  InheritedRanger({
+    Key? key,
+    required Widget child,
+    required this.activeYear,
+    required this.activeTab,
+    required this.tabController,
+    required this.dateRange,
+    required this.selectingStart,
+    required this.navKey,
+    required this.rangerType,
+    required this.itemHeight,
+    required this.runSpacing,
+    required this.activeDateBottomSpace,
+    required this.activeDateFontSize,
+    required this.itemWidth,
+    required this.minYear,
+    required this.maxYear,
+  }) : super(child: child, key: key);
 
   @override
   bool updateShouldNotify(covariant InheritedRanger oldWidget) => true;

@@ -6,13 +6,17 @@ class SecondaryPage extends StatelessWidget {
   SecondaryPage({Key? key, required this.dateTime}) : super(key: key);
 
   late final pickedDate = ValueNotifier(dateTime);
-  late var yearController =
-      FixedExtentScrollController(initialItem: dateTime.year - 2000);
+  late var years = List.generate(
+      ranger.maxYear - ranger.minYear + 1, (index) => ranger.minYear + index);
+  late var yearController = FixedExtentScrollController(
+      initialItem: years.indexWhere((element) => element == dateTime.year));
   late var monthController =
       FixedExtentScrollController(initialItem: dateTime.month - 1);
+  late InheritedRanger ranger;
 
   @override
   Widget build(BuildContext context) {
+    ranger = InheritedRanger.of(context);
     return ValueListenableBuilder<DateTime>(
       valueListenable: pickedDate,
       builder: (context, date, child) => Column(
@@ -33,11 +37,11 @@ class SecondaryPage extends StatelessWidget {
                   child: CupertinoPicker.builder(
                       itemExtent: 50,
                       scrollController: yearController,
-                      childCount: DateTime.now().year - 1999,
+                      childCount: years.length,
                       onSelectedItemChanged: (value) =>
-                          pickedDate.value = DateTime(2000 + value, date.month),
+                          pickedDate.value = DateTime(years[value], date.month),
                       itemBuilder: (context, index) =>
-                          Center(child: Text("${2000 + index}"))),
+                          Center(child: Text("${years[index]}"))),
                 ),
                 SizedBox(width: 4),
                 Expanded(
