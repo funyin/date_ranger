@@ -6,11 +6,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+part 'src/inherted_ranger.dart';
 part 'src/primary_page.dart';
 part 'src/secondary_page.dart';
 part 'utils/enums.dart';
 part 'utils/extensions.dart';
-part 'src/inherted_ranger.dart';
 part 'utils/type_defs.dart';
 
 class DateRanger extends StatefulWidget {
@@ -89,6 +89,9 @@ class DateRanger extends StatefulWidget {
   ///The minimum vertical space between the activeDate and the dates(_days).
   final double activeDateBottomSpace;
 
+  /// The color used to display the info text. Defaults to [Theme.of(context).colorScheme.primary]
+  final Color? infoTextColor;
+
   final bool showDoubleTapInfo;
 
   final int minYear;
@@ -114,7 +117,10 @@ class DateRanger extends StatefulWidget {
       this.itemHeight = 32,
       this.runSpacing = 10,
       this.activeDateBottomSpace = 10,
-      this.showDoubleTapInfo = true, this.minYear = 1940, this.maxYear = 2100})
+      this.showDoubleTapInfo = true,
+      this.minYear = 1940,
+      this.maxYear = 2100,
+      this.infoTextColor})
       : super(key: key);
 
   @override
@@ -172,8 +178,7 @@ class _DateRangerState extends State<DateRanger>
                   background: widget.backgroundColor,
                   primary: widget.activeItemBackground,
                   onPrimary: widget.inRangeTextColor,
-                  onBackground: widget.outOfRangeTextColor,
-                  primaryVariant: widget.borderColors)),
+                  onBackground: widget.outOfRangeTextColor)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -210,7 +215,8 @@ class _DateRangerState extends State<DateRanger>
                     "Double tap to find date",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
+                        color: widget.infoTextColor ??
+                            Theme.of(context).colorScheme.primary,
                         fontSize: 12),
                   ),
                 )),
@@ -342,7 +348,7 @@ class _DateRangerState extends State<DateRanger>
                   border: Border.all(
                       color:
                           selectingStart && start || !selectingStart && !start
-                              ? Theme.of(context).colorScheme.primaryVariant
+                              ? Theme.of(context).colorScheme.primaryContainer
                               : Colors.transparent),
                   color: Theme.of(context).colorScheme.background,
                   borderRadius: BorderRadius.circular(7)),
