@@ -89,7 +89,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
               alignment: left ? Alignment.centerRight : Alignment.centerLeft,
               child: Icon(
                 left ? Icons.chevron_left : Icons.chevron_right,
-                color: colorScheme.primaryVariant,
+                color: colorScheme.outline,
               ),
             ),
           ),
@@ -220,7 +220,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                           shape: BoxShape.circle,
                           border: Border.all(
                               color: primary
-                                  ? colorScheme.primaryVariant
+                                  ? colorScheme.outline
                                   : Colors.transparent,
                               width: 2),
                           color: primary || secondary

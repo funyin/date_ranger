@@ -1,7 +1,4 @@
 library date_ranger;
-
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -173,7 +170,7 @@ class _DateRangerState extends State<DateRanger>
                   primary: widget.activeItemBackground,
                   onPrimary: widget.inRangeTextColor,
                   onBackground: widget.outOfRangeTextColor,
-                  primaryVariant: widget.borderColors)),
+                  outline: widget.borderColors)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -342,7 +339,7 @@ class _DateRangerState extends State<DateRanger>
                   border: Border.all(
                       color:
                           selectingStart && start || !selectingStart && !start
-                              ? Theme.of(context).colorScheme.primaryVariant
+                              ? Theme.of(context).colorScheme.outline
                               : Colors.transparent),
                   color: Theme.of(context).colorScheme.background,
                   borderRadius: BorderRadius.circular(7)),
