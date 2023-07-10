@@ -96,6 +96,10 @@ class DateRanger extends StatefulWidget {
 
   final bool showDoubleTapInfo;
 
+  ///if[true] constrain the width of the widget to hold only 7 days
+  ///if[false] the widget is responsive and has no fixed width
+  final bool showWeekDay;
+
   final int minYear;
   final int maxYear;
 
@@ -123,6 +127,7 @@ class DateRanger extends StatefulWidget {
     this.showDoubleTapInfo = true,
     this.minYear = 1940,
     this.maxYear = 2100,
+    this.showWeekDay = true,
   }) : super(key: key);
 
   @override
@@ -134,7 +139,7 @@ class _DateRangerState extends State<DateRanger>
   late double itemWidth = widget.itemHeight + (widget.itemHeight * 0.25);
   late var isRange = widget.rangerType == DateRangerType.range;
   late final initialDate =
-  isRange ? DateTime.now() : widget.initialDate ?? DateTime.now();
+      isRange ? DateTime.now() : widget.initialDate ?? DateTime.now();
   final showInfo = ValueNotifier(false);
   late ValueNotifier<DateTimeRange> dateRange = ValueNotifier(
       widget.initialRange ??
@@ -170,22 +175,18 @@ class _DateRangerState extends State<DateRanger>
     resetForSingleCase();
     return Theme(
       data: ThemeData(
-          brightness: Theme
-              .of(context)
-              .brightness,
-          colorScheme: (Theme
-              .of(context)
-              .brightness == Brightness.light
-              ? ColorScheme.light()
-              : ColorScheme.dark())
+          brightness: Theme.of(context).brightness,
+          colorScheme: (Theme.of(context).brightness == Brightness.light
+                  ? ColorScheme.light()
+                  : ColorScheme.dark())
               .copyWith(
-              secondary: widget.rangeBackground,
-              error: widget.errorColor,
-              background: widget.backgroundColor,
-              primary: widget.activeItemBackground,
-              onPrimary: widget.inRangeTextColor,
-              onBackground: widget.outOfRangeTextColor,
-              outline: widget.borderColors)),
+                  secondary: widget.rangeBackground,
+                  error: widget.errorColor,
+                  background: widget.backgroundColor,
+                  primary: widget.activeItemBackground,
+                  onPrimary: widget.inRangeTextColor,
+                  onBackground: widget.outOfRangeTextColor,
+                  outline: widget.borderColors)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -212,40 +213,39 @@ class _DateRangerState extends State<DateRanger>
           ),
           ValueListenableBuilder<bool>(
             valueListenable: showInfo,
-            builder: (context, value, child) =>
-                AnimatedOpacity(
-                    duration: Duration(seconds: 2),
-                    opacity: value ? 1 : 0,
-                    child: Padding(
-                      padding:
+            builder: (context, value, child) => AnimatedOpacity(
+                duration: Duration(seconds: 2),
+                opacity: value ? 1 : 0,
+                child: Padding(
+                  padding:
                       const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
-                      child: Text(
-                        "Double tap to find date",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Theme
-                                .of(context)
-                                .colorScheme
-                                .primary,
-                            fontSize: 12),
-                      ),
-                    )),
+                  child: Text(
+                    "Double tap to find date",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontSize: 12),
+                  ),
+                )),
           ),
           LayoutBuilder(
             builder: (context, constraints) {
+              var sevenDaysWidth =
+                  itemWidth * 7 + (widget.horizontalPadding * 2);
+              var width = widget.showWeekDay ? sevenDaysWidth : double.infinity;
               return Container(
-                constraints:
-                BoxConstraints(maxHeight: calculateHeight(constraints)),
+                constraints: BoxConstraints(
+                    maxHeight: calculateHeight(constraints),
+                    /*maxWidth: width,
+                    minWidth: width*/),
+                width: width,
                 margin: EdgeInsets.only(bottom: 26),
                 padding: EdgeInsets.symmetric(
-                    horizontal: widget.horizontalPadding,
-                    vertical: widget.verticalPadding)
+                        horizontal: widget.horizontalPadding,
+                        vertical: widget.verticalPadding)
                     .copyWith(top: 0),
                 decoration: BoxDecoration(
-                    color: Theme
-                        .of(context)
-                        .colorScheme
-                        .background,
+                    color: Theme.of(context).colorScheme.background,
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
                       BoxShadow(color: Colors.black12.withOpacity(0.6))
@@ -265,6 +265,7 @@ class _DateRangerState extends State<DateRanger>
                   activeDateFontSize: widget.activeDateFontSize,
                   minYear: widget.minYear,
                   maxYear: widget.maxYear,
+                  showWeekday: widget.showWeekDay,
                   child: Navigator(
                     key: navKey,
                     onGenerateRoute: (settings) {
@@ -287,23 +288,19 @@ class _DateRangerState extends State<DateRanger>
           ),
           ValueListenableBuilder<String>(
               valueListenable: errorText,
-              builder: (context, value, child) =>
-                  AnimatedSwitcher(
+              builder: (context, value, child) => AnimatedSwitcher(
                     duration: Duration(milliseconds: 300),
                     reverseDuration: Duration(seconds: 2),
                     child: value.isEmpty
                         ? SizedBox(
-                      height: 16,
-                    )
+                            height: 16,
+                          )
                         : Text(
-                      value,
-                      style: TextStyle(
-                          color: Theme
-                              .of(context)
-                              .colorScheme
-                              .error,
-                          fontSize: 14),
-                    ),
+                            value,
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.error,
+                                fontSize: 14),
+                          ),
                   )),
         ],
       ),
@@ -311,16 +308,24 @@ class _DateRangerState extends State<DateRanger>
   }
 
   double calculateHeight(BoxConstraints constraints) {
-    var availableWidth = constraints.maxWidth - (widget.horizontalPadding * 2);
-    var itemsPerRole = (availableWidth - (availableWidth % itemWidth)) /
-        itemWidth;
+    var availableWidth = widget.showWeekDay
+        ? (itemWidth * 7)
+        : (constraints.maxWidth - (widget.horizontalPadding * 2));
+    var itemsPerRole =
+        (availableWidth - (availableWidth % itemWidth)) / itemWidth;
     var maxDaysPerMonth = 31;
-    final numRows = (maxDaysPerMonth / itemsPerRole).ceil();
-    final sumRowsHeight =
-        (numRows * widget.itemHeight) + ((numRows - 1) * widget.runSpacing);
+
+    var numRows = (maxDaysPerMonth / itemsPerRole).ceil();
+    if (widget.showWeekDay) numRows++;
+    var sumRunSpace = ((numRows - 1) * widget.runSpacing);
+    if (widget.showWeekDay) sumRunSpace += widget.runSpacing;
+
+    final sumRowsHeight = (numRows * widget.itemHeight) + sumRunSpace;
+
     final height = widget.activeDateFontSize +
         widget.activeDateBottomSpace +
-        sumRowsHeight + (widget.verticalPadding * 2);
+        sumRowsHeight +
+        (widget.verticalPadding * 2);
 
     return height;
   }
@@ -349,10 +354,9 @@ class _DateRangerState extends State<DateRanger>
   Widget pickerOutput([bool start = true]) {
     return Expanded(
       child: InkWell(
-        onTap: () =>
-            setState(() {
-              selectingStart = start;
-            }),
+        onTap: () => setState(() {
+          selectingStart = start;
+        }),
         onDoubleTap: () {
           var range = dateRange.value;
           setState(() {
@@ -369,16 +373,10 @@ class _DateRangerState extends State<DateRanger>
               decoration: BoxDecoration(
                   border: Border.all(
                       color:
-                      selectingStart && start || !selectingStart && !start
-                          ? Theme
-                          .of(context)
-                          .colorScheme
-                          .outline
-                          : Colors.transparent),
-                  color: Theme
-                      .of(context)
-                      .colorScheme
-                      .background,
+                          selectingStart && start || !selectingStart && !start
+                              ? Theme.of(context).colorScheme.outline
+                              : Colors.transparent),
+                  color: Theme.of(context).colorScheme.background,
                   borderRadius: BorderRadius.circular(7)),
               duration: Duration(milliseconds: 100),
               child: Column(
@@ -391,8 +389,7 @@ class _DateRangerState extends State<DateRanger>
                     isRange ? "${start ? "Start" : "End"} date" : "Date",
                     maxLines: 1,
                     style: TextStyle(
-                        color: Theme
-                            .of(context)
+                        color: Theme.of(context)
                             .colorScheme
                             .onBackground
                             .withOpacity(0.3),
@@ -401,14 +398,13 @@ class _DateRangerState extends State<DateRanger>
                   SizedBox(height: 4),
                   ValueListenableBuilder<DateTimeRange>(
                     valueListenable: dateRange,
-                    builder: (context, value, child) =>
-                        FittedBox(
-                          child: Text(
-                            (widget.outputDateFormat ?? DateFormat.yMd())
-                                .format(start ? value.start : value.end),
-                            maxLines: 1,
-                          ),
-                        ),
+                    builder: (context, value, child) => FittedBox(
+                      child: Text(
+                        (widget.outputDateFormat ?? DateFormat.yMd())
+                            .format(start ? value.start : value.end),
+                        maxLines: 1,
+                      ),
+                    ),
                   )
                 ],
               ),

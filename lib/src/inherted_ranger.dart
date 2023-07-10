@@ -6,6 +6,7 @@ class InheritedRanger extends InheritedWidget {
   final TabController tabController;
   final ValueNotifier<DateTimeRange> dateRange;
   final bool selectingStart;
+  final bool showWeekday;
   final GlobalKey<NavigatorState> navKey;
   final DateRangerType rangerType;
   final double itemHeight;
@@ -24,6 +25,7 @@ class InheritedRanger extends InheritedWidget {
     required this.tabController,
     required this.dateRange,
     required this.selectingStart,
+    required this.showWeekday,
     required this.navKey,
     required this.rangerType,
     required this.itemHeight,

@@ -104,147 +104,189 @@ class _PrimaryPageState extends State<PrimaryPage> {
     var daysInMonth = DateUtils.getDaysInMonth(ranger.activeYear, tabIndex + 1);
     var itemsPerRole = (maxWidth ~/ itemWidth);
     var isRange = ranger.rangerType == DateRangerType.range;
-    return ValueListenableBuilder<DateTimeRange>(
-      valueListenable: ranger.dateRange,
-      builder: (context, value, child) => Align(
-        alignment: Alignment.bottomCenter,
-        child: Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            Wrap(
-              runSpacing: ranger.runSpacing,
-              children: List.generate(daysInMonth, (wrapIndex) {
-                var year = ranger.activeYear;
-                var month = tabIndex + 1;
-                var day = wrapIndex + 1;
-                var dateTime = DateTime(year, month, day);
-                var isStart = dateTime.compareTo(value.start) == 0;
-                var isEnd = dateTime.compareTo(value.end) == 0;
-                var primary = dateTime.compareTo(
-                        ranger.selectingStart ? value.start : value.end) ==
-                    0;
-                var secondary = dateTime.compareTo(
-                        !ranger.selectingStart ? value.start : value.end) ==
-                    0;
-                var inRange = dateTime.isBefore(value.end) &&
-                        dateTime.isAfter(value.start) ||
-                    (secondary || primary);
-                var borderRadius = Radius.circular(itemWidth / 2);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final availableWidth = constraints.maxWidth;
+        var numItemsPerRow =
+            (availableWidth - (availableWidth % itemWidth)) / itemWidth;
+        return ValueListenableBuilder<DateTimeRange>(
+          valueListenable: ranger.dateRange,
+          builder: (context, value, child) => Align(
+            alignment: Alignment.bottomCenter,
+            child: Stack(
+              alignment: Alignment.topCenter,
+              children: [
+                Wrap(
+                  runSpacing: ranger.runSpacing,
+                  children: List.generate(daysInMonth, (wrapIndex) {
+                    var year = ranger.activeYear;
+                    var month = tabIndex + 1;
+                    var day = wrapIndex + 1;
+                    var dateTime = DateTime(year, month, day);
+                    var isStart = dateTime.compareTo(value.start) == 0;
+                    var isEnd = dateTime.compareTo(value.end) == 0;
+                    var primary = dateTime.compareTo(
+                            ranger.selectingStart ? value.start : value.end) ==
+                        0;
+                    var secondary = dateTime.compareTo(
+                            !ranger.selectingStart ? value.start : value.end) ==
+                        0;
+                    var inRange = dateTime.isBefore(value.end) &&
+                            dateTime.isAfter(value.start) ||
+                        (secondary || primary);
+                    var borderRadius = Radius.circular(itemWidth / 2);
 
-                ///Positioned at extreme ends
-                var isExtremeEnd = day % itemsPerRole == 0;
-                var isExtremeStart = day % itemsPerRole == 1;
-                var isExtreme = isExtremeStart || isExtremeEnd;
-                var isItemsEnd = wrapIndex == daysInMonth - 1;
-                return Transform.translate(
-                  offset: Offset(
-                      isStart ||
-                              isEnd ||
-                              isExtreme ||
-                              isItemsEnd && !(isStart && isEnd)
-                          ? (isStart || isExtremeStart ? 4 : -4)
-                          : 0,
-                      0),
-                  child: Container(
-                      width: isItemsEnd && isExtremeStart ||
-                              isStart && isExtremeEnd ||
-                              (isExtremeStart && isEnd) ||
-                              !isRange
-                          ? itemHeight
-                          : itemWidth,
-                      height: itemHeight,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.horizontal(
-                              left: isStart || isExtremeStart
-                                  ? borderRadius
-                                  : Radius.zero,
-                              right: isEnd || isExtremeEnd || isItemsEnd
-                                  ? borderRadius
-                                  : Radius.zero),
-                          color: inRange && isRange && !(isStart && isEnd)
-                              ? colorScheme.secondary
-                              : Colors.transparent)),
-                );
-              }),
+                    ///Positioned at extreme ends
+                    var isExtremeEnd = day % itemsPerRole == 0;
+                    var isExtremeStart = day % itemsPerRole == 1;
+                    var isExtreme = isExtremeStart || isExtremeEnd;
+                    var isItemsEnd = wrapIndex == daysInMonth - 1;
+                    return Transform.translate(
+                      offset: Offset(
+                          isStart ||
+                                  isEnd ||
+                                  isExtreme ||
+                                  isItemsEnd && !(isStart && isEnd)
+                              ? (isStart || isExtremeStart ? 4 : -4)
+                              : 0,
+                          0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (ranger.showWeekday &&
+                              (wrapIndex + 1) <= numItemsPerRow) ...[
+                            SizedBox(height: itemHeight + ranger.runSpacing)
+                          ],
+                          Container(
+                              width: isItemsEnd && isExtremeStart ||
+                                      isStart && isExtremeEnd ||
+                                      (isExtremeStart && isEnd) ||
+                                      !isRange
+                                  ? itemHeight
+                                  : itemWidth,
+                              height: itemHeight,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.horizontal(
+                                      left: isStart || isExtremeStart
+                                          ? borderRadius
+                                          : Radius.zero,
+                                      right: isEnd || isExtremeEnd || isItemsEnd
+                                          ? borderRadius
+                                          : Radius.zero),
+                                  color:
+                                      inRange && isRange && !(isStart && isEnd)
+                                          ? colorScheme.secondary
+                                          : Colors.transparent)),
+                        ],
+                      ),
+                    );
+                  }),
+                ),
+                Wrap(
+                  runSpacing: ranger.runSpacing,
+                  children: List.generate(daysInMonth, (wrapIndex) {
+                    var year = ranger.activeYear;
+                    var month = tabIndex + 1;
+                    var day = wrapIndex + 1;
+                    var dateTime = DateTime(year, month, day);
+                    var primary = dateTime.compareTo(
+                            ranger.selectingStart ? value.start : value.end) ==
+                        0;
+                    var secondary = dateTime.compareTo(
+                            !ranger.selectingStart ? value.start : value.end) ==
+                        0;
+                    var inRange = dateTime.isBefore(value.end) &&
+                            dateTime.isAfter(value.start) ||
+                        (secondary || primary);
+                    var inRangeTextColor = colorScheme.onPrimary;
+                    var outOfRangeTextColor = colorScheme.onBackground;
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        if (ranger.showWeekday &&
+                            (wrapIndex + 1) <= numItemsPerRow) ...[
+                          Container(
+                            width: itemWidth,
+                            height: itemHeight,
+                            alignment: Alignment.center,
+                            child: Text(
+                              DateFormat(DateFormat.ABBR_WEEKDAY)
+                                  .format(dateTime),
+                              style: TextStyle(
+                                  fontSize: theme.textTheme.bodyText1?.fontSize,
+                                  color: outOfRangeTextColor),
+                            ),
+                          ),
+                          SizedBox(height: ranger.runSpacing),
+                        ],
+                        InkWell(
+                          onTap: () async {
+                            var startIsAfterEnd = ranger.selectingStart &&
+                                !dateTime.compareTo(value.end).isNegative &&
+                                isRange;
+                            var endISBeforeStart = !ranger.selectingStart &&
+                                dateTime.compareTo(value.start).isNegative &&
+                                isRange;
+                            if (startIsAfterEnd || endISBeforeStart) {
+                              widget.onError(startIsAfterEnd
+                                  ? "Start date cannot be after end date"
+                                  : "End date cannot be before start date");
+                            } else {
+                              ///set the start and end to the same day if is single picker
+                              var newRange = isRange
+                                  ? value.copyWith(
+                                      start: ranger.selectingStart
+                                          ? dateTime
+                                          : value.start,
+                                      end: !ranger.selectingStart
+                                          ? dateTime
+                                          : value.end)
+                                  : DateTimeRange(
+                                      start: dateTime, end: dateTime);
+                              ranger.dateRange.value = newRange;
+                              widget.onRangeChanged(newRange);
+                            }
+                          },
+                          child: AnimatedContainer(
+                              key: ValueKey(dateTime),
+                              width: itemWidth,
+                              height: itemHeight,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                      color: primary
+                                          ? colorScheme.outline
+                                          : Colors.transparent,
+                                      width: 2),
+                                  color: primary || secondary
+                                      ? colorScheme.primary
+                                      : Colors.transparent),
+                              duration: Duration(milliseconds: 500),
+                              child: Text(
+                                "${wrapIndex + 1}",
+                                maxLines: 1,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize:
+                                        theme.textTheme.bodyText1?.fontSize,
+                                    color: primary || secondary
+                                        ? inRangeTextColor
+                                        : inRange && isRange
+                                            ? inRangeTextColor.withOpacity(0.8)
+                                            : outOfRangeTextColor),
+                              )),
+                        ),
+                      ],
+                    );
+                  }),
+                ),
+              ],
             ),
-            Wrap(
-              runSpacing: ranger.runSpacing,
-              children: List.generate(daysInMonth, (wrapIndex) {
-                var year = ranger.activeYear;
-                var month = tabIndex + 1;
-                var day = wrapIndex + 1;
-                var dateTime = DateTime(year, month, day);
-                var primary = dateTime.compareTo(
-                        ranger.selectingStart ? value.start : value.end) ==
-                    0;
-                var secondary = dateTime.compareTo(
-                        !ranger.selectingStart ? value.start : value.end) ==
-                    0;
-                var inRange = dateTime.isBefore(value.end) &&
-                        dateTime.isAfter(value.start) ||
-                    (secondary || primary);
-                var inRangeTextColor = colorScheme.onPrimary;
-                var outOfRangeTextColor = colorScheme.onBackground;
-                return InkResponse(
-                  onTap: () async {
-                    var startIsAfterEnd = ranger.selectingStart &&
-                        !dateTime.compareTo(value.end).isNegative &&
-                        isRange;
-                    var endISBeforeStart = !ranger.selectingStart &&
-                        dateTime.compareTo(value.start).isNegative &&
-                        isRange;
-                    if (startIsAfterEnd || endISBeforeStart) {
-                      widget.onError(startIsAfterEnd
-                          ? "Start date cannot be after end date"
-                          : "End date cannot be before start date");
-                    } else {
-                      ///set the start and end to the same day if is single picker
-                      var newRange = isRange
-                          ? value.copyWith(
-                              start: ranger.selectingStart
-                                  ? dateTime
-                                  : value.start,
-                              end:
-                                  !ranger.selectingStart ? dateTime : value.end)
-                          : DateTimeRange(start: dateTime, end: dateTime);
-                      ranger.dateRange.value = newRange;
-                      widget.onRangeChanged(newRange);
-                    }
-                  },
-                  child: AnimatedContainer(
-                      key: ValueKey(dateTime),
-                      width: itemWidth,
-                      height: itemHeight,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                              color: primary
-                                  ? colorScheme.outline
-                                  : Colors.transparent,
-                              width: 2),
-                          color: primary || secondary
-                              ? colorScheme.primary
-                              : Colors.transparent),
-                      duration: Duration(milliseconds: 500),
-                      child: Text(
-                        "${wrapIndex + 1}",
-                        maxLines: 1,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: theme.textTheme.bodyText1!.fontSize,
-                            color: primary || secondary
-                                ? inRangeTextColor
-                                : inRange && isRange
-                                    ? inRangeTextColor.withOpacity(0.8)
-                                    : outOfRangeTextColor),
-                      )),
-                );
-              }),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
