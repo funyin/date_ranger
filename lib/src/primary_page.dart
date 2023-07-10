@@ -39,7 +39,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                   InkWell(
                     onTap: () async {
                       var newDate = await ranger.navKey.currentState!
-                          .pushNamed("secondary", arguments: tabDate);
+                          .pushNamed(SecondaryPage.route, arguments: tabDate);
                       print(newDate);
                       if (newDate != null)
                         widget.onNewDate.call(newDate as DateTime);

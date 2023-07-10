@@ -12,10 +12,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Date Ranger',
       theme: ThemeData.light(useMaterial3: true),
       darkTheme: ThemeData.dark(useMaterial3: true),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Date Ranger'),
     );
   }
 }
@@ -72,10 +72,12 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: const Center(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24,vertical: 16),
-          child: DateRanger(),
+      body: const SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24,vertical: 16),
+            child: DateRanger(),
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(

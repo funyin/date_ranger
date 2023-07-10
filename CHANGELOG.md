@@ -1,6 +1,7 @@
-## 0.0.2 - 10/7/2023
+## 1.0.0 - 10/7/2023
 
 * Updated min dart version to 3.0.0
+* Changed color scheme primaryVariant to outline 
 
 ## 0.0.2 - 8/3/2022
 

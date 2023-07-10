@@ -2,6 +2,7 @@ part of '../date_ranger.dart';
 
 class SecondaryPage extends StatelessWidget {
   final DateTime dateTime;
+  static final String route = "secondary";
 
   SecondaryPage({Key? key, required this.dateTime}) : super(key: key);
 

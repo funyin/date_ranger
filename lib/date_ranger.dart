@@ -1,13 +1,19 @@
 library date_ranger;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 part 'src/primary_page.dart';
+
 part 'src/secondary_page.dart';
+
 part 'utils/enums.dart';
+
 part 'utils/extensions.dart';
+
 part 'src/inherted_ranger.dart';
+
 part 'utils/type_defs.dart';
 
 class DateRanger extends StatefulWidget {
@@ -73,6 +79,8 @@ class DateRanger extends StatefulWidget {
   ///Affects the height of the main picker
   final double horizontalPadding;
 
+  final double verticalPadding;
+
   ///The height of each date(_days_).
   ///
   /// Affects the height of the main picker.
@@ -92,27 +100,30 @@ class DateRanger extends StatefulWidget {
   final int maxYear;
 
   ///A date picker for selecting single dates and date ranges
-  const DateRanger(
-      {Key? key,
-      this.borderColors,
-      this.backgroundColor,
-      this.errorColor,
-      this.rangeBackground,
-      this.activeItemBackground,
-      this.initialRange,
-      this.initialDate,
-      this.onRangeChanged,
-      this.inRangeTextColor,
-      this.outOfRangeTextColor,
-      this.rangerType = DateRangerType.range,
-      this.outputDateFormat,
-      this.activeDateFontSize = 16.0,
-      this.horizontalPadding = 8,
-      this.itemHeight = 32,
-      this.runSpacing = 10,
-      this.activeDateBottomSpace = 10,
-      this.showDoubleTapInfo = true, this.minYear = 1940, this.maxYear = 2100})
-      : super(key: key);
+  const DateRanger({
+    Key? key,
+    this.borderColors,
+    this.backgroundColor,
+    this.errorColor,
+    this.rangeBackground,
+    this.activeItemBackground,
+    this.initialRange,
+    this.initialDate,
+    this.onRangeChanged,
+    this.inRangeTextColor,
+    this.outOfRangeTextColor,
+    this.rangerType = DateRangerType.range,
+    this.outputDateFormat,
+    this.activeDateFontSize = 16.0,
+    this.horizontalPadding = 8,
+    this.verticalPadding = 24,
+    this.itemHeight = 32,
+    this.runSpacing = 10,
+    this.activeDateBottomSpace = 10,
+    this.showDoubleTapInfo = true,
+    this.minYear = 1940,
+    this.maxYear = 2100,
+  }) : super(key: key);
 
   @override
   _DateRangerState createState() => _DateRangerState();
@@ -123,7 +134,7 @@ class _DateRangerState extends State<DateRanger>
   late double itemWidth = widget.itemHeight + (widget.itemHeight * 0.25);
   late var isRange = widget.rangerType == DateRangerType.range;
   late final initialDate =
-      isRange ? DateTime.now() : widget.initialDate ?? DateTime.now();
+  isRange ? DateTime.now() : widget.initialDate ?? DateTime.now();
   final showInfo = ValueNotifier(false);
   late ValueNotifier<DateTimeRange> dateRange = ValueNotifier(
       widget.initialRange ??
@@ -159,18 +170,22 @@ class _DateRangerState extends State<DateRanger>
     resetForSingleCase();
     return Theme(
       data: ThemeData(
-          brightness: Theme.of(context).brightness,
-          colorScheme: (Theme.of(context).brightness == Brightness.light
-                  ? ColorScheme.light()
-                  : ColorScheme.dark())
+          brightness: Theme
+              .of(context)
+              .brightness,
+          colorScheme: (Theme
+              .of(context)
+              .brightness == Brightness.light
+              ? ColorScheme.light()
+              : ColorScheme.dark())
               .copyWith(
-                  secondary: widget.rangeBackground,
-                  error: widget.errorColor,
-                  background: widget.backgroundColor,
-                  primary: widget.activeItemBackground,
-                  onPrimary: widget.inRangeTextColor,
-                  onBackground: widget.outOfRangeTextColor,
-                  outline: widget.borderColors)),
+              secondary: widget.rangeBackground,
+              error: widget.errorColor,
+              background: widget.backgroundColor,
+              primary: widget.activeItemBackground,
+              onPrimary: widget.inRangeTextColor,
+              onBackground: widget.outOfRangeTextColor,
+              outline: widget.borderColors)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -197,32 +212,40 @@ class _DateRangerState extends State<DateRanger>
           ),
           ValueListenableBuilder<bool>(
             valueListenable: showInfo,
-            builder: (context, value, child) => AnimatedOpacity(
-                duration: Duration(seconds: 2),
-                opacity: value ? 1 : 0,
-                child: Padding(
-                  padding:
+            builder: (context, value, child) =>
+                AnimatedOpacity(
+                    duration: Duration(seconds: 2),
+                    opacity: value ? 1 : 0,
+                    child: Padding(
+                      padding:
                       const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
-                  child: Text(
-                    "Double tap to find date",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontSize: 12),
-                  ),
-                )),
+                      child: Text(
+                        "Double tap to find date",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Theme
+                                .of(context)
+                                .colorScheme
+                                .primary,
+                            fontSize: 12),
+                      ),
+                    )),
           ),
           LayoutBuilder(
             builder: (context, constraints) {
               return Container(
                 constraints:
-                    BoxConstraints(maxHeight: calculateHeight(constraints)),
+                BoxConstraints(maxHeight: calculateHeight(constraints)),
                 margin: EdgeInsets.only(bottom: 26),
                 padding: EdgeInsets.symmetric(
-                        horizontal: widget.horizontalPadding, vertical: 24)
+                    horizontal: widget.horizontalPadding,
+                    vertical: widget.verticalPadding)
                     .copyWith(top: 0),
                 decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.background,
+                    color: Theme
+                        .of(context)
+                        .colorScheme
+                        .background,
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
                       BoxShadow(color: Colors.black12.withOpacity(0.6))
@@ -264,19 +287,23 @@ class _DateRangerState extends State<DateRanger>
           ),
           ValueListenableBuilder<String>(
               valueListenable: errorText,
-              builder: (context, value, child) => AnimatedSwitcher(
+              builder: (context, value, child) =>
+                  AnimatedSwitcher(
                     duration: Duration(milliseconds: 300),
                     reverseDuration: Duration(seconds: 2),
                     child: value.isEmpty
                         ? SizedBox(
-                            height: 16,
-                          )
+                      height: 16,
+                    )
                         : Text(
-                            value,
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.error,
-                                fontSize: 14),
-                          ),
+                      value,
+                      style: TextStyle(
+                          color: Theme
+                              .of(context)
+                              .colorScheme
+                              .error,
+                          fontSize: 14),
+                    ),
                   )),
         ],
       ),
@@ -284,15 +311,18 @@ class _DateRangerState extends State<DateRanger>
   }
 
   double calculateHeight(BoxConstraints constraints) {
-    var itemsPerRole =
-        (constraints.maxWidth - (widget.horizontalPadding * 2)) ~/ itemWidth;
+    var availableWidth = constraints.maxWidth - (widget.horizontalPadding * 2);
+    var itemsPerRole = (availableWidth - (availableWidth % itemWidth)) /
+        itemWidth;
     var maxDaysPerMonth = 31;
-    return maxDaysPerMonth /
-        itemsPerRole *
-        (widget.itemHeight +
-            widget.runSpacing +
-            widget.activeDateBottomSpace +
-            widget.activeDateFontSize);
+    final numRows = (maxDaysPerMonth / itemsPerRole).ceil();
+    final sumRowsHeight =
+        (numRows * widget.itemHeight) + ((numRows - 1) * widget.runSpacing);
+    final height = widget.activeDateFontSize +
+        widget.activeDateBottomSpace +
+        sumRowsHeight + (widget.verticalPadding * 2);
+
+    return height;
   }
 
   ///adjust selections for single case on state changes with different rangeTypes
@@ -319,9 +349,10 @@ class _DateRangerState extends State<DateRanger>
   Widget pickerOutput([bool start = true]) {
     return Expanded(
       child: InkWell(
-        onTap: () => setState(() {
-          selectingStart = start;
-        }),
+        onTap: () =>
+            setState(() {
+              selectingStart = start;
+            }),
         onDoubleTap: () {
           var range = dateRange.value;
           setState(() {
@@ -338,10 +369,16 @@ class _DateRangerState extends State<DateRanger>
               decoration: BoxDecoration(
                   border: Border.all(
                       color:
-                          selectingStart && start || !selectingStart && !start
-                              ? Theme.of(context).colorScheme.outline
-                              : Colors.transparent),
-                  color: Theme.of(context).colorScheme.background,
+                      selectingStart && start || !selectingStart && !start
+                          ? Theme
+                          .of(context)
+                          .colorScheme
+                          .outline
+                          : Colors.transparent),
+                  color: Theme
+                      .of(context)
+                      .colorScheme
+                      .background,
                   borderRadius: BorderRadius.circular(7)),
               duration: Duration(milliseconds: 100),
               child: Column(
@@ -354,7 +391,8 @@ class _DateRangerState extends State<DateRanger>
                     isRange ? "${start ? "Start" : "End"} date" : "Date",
                     maxLines: 1,
                     style: TextStyle(
-                        color: Theme.of(context)
+                        color: Theme
+                            .of(context)
                             .colorScheme
                             .onBackground
                             .withOpacity(0.3),
@@ -363,13 +401,14 @@ class _DateRangerState extends State<DateRanger>
                   SizedBox(height: 4),
                   ValueListenableBuilder<DateTimeRange>(
                     valueListenable: dateRange,
-                    builder: (context, value, child) => FittedBox(
-                      child: Text(
-                        (widget.outputDateFormat ?? DateFormat.yMd())
-                            .format(start ? value.start : value.end),
-                        maxLines: 1,
-                      ),
-                    ),
+                    builder: (context, value, child) =>
+                        FittedBox(
+                          child: Text(
+                            (widget.outputDateFormat ?? DateFormat.yMd())
+                                .format(start ? value.start : value.end),
+                            maxLines: 1,
+                          ),
+                        ),
                   )
                 ],
               ),
