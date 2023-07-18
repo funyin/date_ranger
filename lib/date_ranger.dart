@@ -127,7 +127,7 @@ class DateRanger extends StatefulWidget {
     this.showDoubleTapInfo = true,
     this.minYear = 1940,
     this.maxYear = 2100,
-    this.showWeekDay = true,
+    this.showWeekDay = false,
   }) : super(key: key);
 
   @override
@@ -189,119 +189,121 @@ class _DateRangerState extends State<DateRanger>
                   outline: widget.borderColors)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(
-            height: 55,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                pickerOutput(),
-                if (widget.rangerType == DateRangerType.range) ...[
-                  Center(
-                      child: SizedBox(
-                          width: 32,
-                          child: Divider(
-                            endIndent: 12,
-                            indent: 12,
-                            thickness: 2,
-                          ))),
-                  pickerOutput(false)
-                ],
-              ],
-            ),
-          ),
-          ValueListenableBuilder<bool>(
-            valueListenable: showInfo,
-            builder: (context, value, child) => AnimatedOpacity(
-                duration: Duration(seconds: 2),
-                opacity: value ? 1 : 0,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
-                  child: Text(
-                    "Double tap to find date",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontSize: 12),
-                  ),
-                )),
-          ),
           LayoutBuilder(
             builder: (context, constraints) {
-              var sevenDaysWidth =
-                  itemWidth * 7 + (widget.horizontalPadding * 2);
-              var width = widget.showWeekDay ? sevenDaysWidth : double.infinity;
+              var sevenDaysWidth = itemWidth * 7 + (widget.horizontalPadding * 2);
+              var width = widget.showWeekDay ? sevenDaysWidth : null;
               return Container(
-                constraints: BoxConstraints(
-                    maxHeight: calculateHeight(constraints),
-                    /*maxWidth: width,
-                    minWidth: width*/),
                 width: width,
-                margin: EdgeInsets.only(bottom: 26),
-                padding: EdgeInsets.symmetric(
-                        horizontal: widget.horizontalPadding,
-                        vertical: widget.verticalPadding)
-                    .copyWith(top: 0),
-                decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.background,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(color: Colors.black12.withOpacity(0.6))
-                    ]),
-                child: InheritedRanger(
-                  selectingStart: selectingStart,
-                  activeYear: activeYear,
-                  tabController: tabController,
-                  rangerType: widget.rangerType,
-                  activeTab: activeTab,
-                  dateRange: dateRange,
-                  navKey: navKey,
-                  itemHeight: widget.itemHeight,
-                  itemWidth: itemWidth,
-                  runSpacing: widget.runSpacing,
-                  activeDateBottomSpace: widget.activeDateBottomSpace,
-                  activeDateFontSize: widget.activeDateFontSize,
-                  minYear: widget.minYear,
-                  maxYear: widget.maxYear,
-                  showWeekday: widget.showWeekDay,
-                  child: Navigator(
-                    key: navKey,
-                    onGenerateRoute: (settings) {
-                      Widget widget;
-                      if (settings.name == "/")
-                        widget = PrimaryPage(
-                          onNewDate: onNewDate,
-                          onRangeChanged: onRangeChanged,
-                          onError: onError,
-                        );
-                      else
-                        widget = SecondaryPage(
-                            dateTime: settings.arguments as DateTime);
-                      return MaterialPageRoute(builder: (context) => widget);
-                    },
-                  ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        pickerOutput(),
+                        if (widget.rangerType == DateRangerType.range) ...[
+                          SizedBox(
+                              width: 32,
+                              child: Divider(
+                                endIndent: 12,
+                                indent: 12,
+                                thickness: 2,
+                              )),
+                          pickerOutput(false)
+                        ],
+                      ],
+                    ),
+                    ValueListenableBuilder<bool>(
+                      valueListenable: showInfo,
+                      builder: (context, value, child) => AnimatedOpacity(
+                          duration: Duration(seconds: 2),
+                          opacity: value ? 1 : 0,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 6, horizontal: 4),
+                            child: Text(
+                              "Double tap to find date",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  fontSize: 12),
+                            ),
+                          )),
+                    ),
+                    Container(
+                      constraints:
+                          BoxConstraints(maxHeight: calculateHeight(constraints)),
+                      margin: EdgeInsets.only(bottom: 26),
+                      padding: EdgeInsets.symmetric(
+                              horizontal: widget.horizontalPadding,
+                              vertical: widget.verticalPadding)
+                          .copyWith(top: 0),
+                      decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.background,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(color: Colors.black12.withOpacity(0.6))
+                          ]),
+                      child: InheritedRanger(
+                        selectingStart: selectingStart,
+                        activeYear: activeYear,
+                        tabController: tabController,
+                        rangerType: widget.rangerType,
+                        activeTab: activeTab,
+                        dateRange: dateRange,
+                        navKey: navKey,
+                        itemHeight: widget.itemHeight,
+                        itemWidth: itemWidth,
+                        runSpacing: widget.runSpacing,
+                        activeDateBottomSpace: widget.activeDateBottomSpace,
+                        activeDateFontSize: widget.activeDateFontSize,
+                        minYear: widget.minYear,
+                        maxYear: widget.maxYear,
+                        showWeekday: widget.showWeekDay,
+                        child: Navigator(
+                          key: navKey,
+                          onGenerateRoute: (settings) {
+                            Widget widget;
+                            if (settings.name == "/")
+                              widget = PrimaryPage(
+                                onNewDate: onNewDate,
+                                onRangeChanged: onRangeChanged,
+                                onError: onError,
+                              );
+                            else
+                              widget = SecondaryPage(
+                                  dateTime: settings.arguments as DateTime);
+                            return MaterialPageRoute(builder: (context) => widget);
+                          },
+                        ),
+                      ),
+                    ),
+                    ValueListenableBuilder<String>(
+                        valueListenable: errorText,
+                        builder: (context, value, child) => AnimatedSwitcher(
+                              duration: Duration(milliseconds: 300),
+                              reverseDuration: Duration(seconds: 2),
+                              child: value.isEmpty
+                                  ? SizedBox(
+                                      height: 16,
+                                    )
+                                  : Text(
+                                      value,
+                                      style: TextStyle(
+                                          color:
+                                              Theme.of(context).colorScheme.error,
+                                          fontSize: 14),
+                                    ),
+                            )),
+                  ],
                 ),
               );
             },
           ),
-          ValueListenableBuilder<String>(
-              valueListenable: errorText,
-              builder: (context, value, child) => AnimatedSwitcher(
-                    duration: Duration(milliseconds: 300),
-                    reverseDuration: Duration(seconds: 2),
-                    child: value.isEmpty
-                        ? SizedBox(
-                            height: 16,
-                          )
-                        : Text(
-                            value,
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.error,
-                                fontSize: 14),
-                          ),
-                  )),
         ],
       ),
     );
@@ -322,7 +324,7 @@ class _DateRangerState extends State<DateRanger>
 
     final sumRowsHeight = (numRows * widget.itemHeight) + sumRunSpace;
 
-    final height = widget.activeDateFontSize +
+    final height = (widget.activeDateFontSize * 1.5) +
         widget.activeDateBottomSpace +
         sumRowsHeight +
         (widget.verticalPadding * 2);
@@ -384,6 +386,7 @@ class _DateRangerState extends State<DateRanger>
                     ? CrossAxisAlignment.start
                     : CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     isRange ? "${start ? "Start" : "End"} date" : "Date",

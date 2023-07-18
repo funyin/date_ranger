@@ -76,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         children: const [
           DateRanger(
-            showWeekDay: false,
+            showWeekDay: true,
           ),
         ],
       ),
