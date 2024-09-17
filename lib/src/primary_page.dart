@@ -214,7 +214,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                               DateFormat(DateFormat.ABBR_WEEKDAY)
                                   .format(dateTime),
                               style: TextStyle(
-                                  fontSize: theme.textTheme.bodyText1?.fontSize,
+                                  fontSize: theme.textTheme.bodyMedium!.fontSize!,
                                   color: outOfRangeTextColor),
                             ),
                           ),
@@ -270,7 +270,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize:
-                                        theme.textTheme.bodyText1?.fontSize,
+                                        theme.textTheme.bodySmall?.fontSize,
                                     color: primary || secondary
                                         ? inRangeTextColor
                                         : inRange && isRange
