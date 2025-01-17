@@ -52,6 +52,8 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  DateRangerType selectedType = DateRangerType.values.first;
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -74,10 +76,31 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        children: const [
-          DateRanger(
+        children: [
+           DateRanger(
             showWeekDay: true,
+            rangerType: selectedType,
           ),
+          const Text("Ranger Type"),
+          const SizedBox(height: 10),
+          ToggleButtons(
+            isSelected:
+                DateRangerType.values.map((e) => e == selectedType).toList(),
+            onPressed: (index) {
+              setState(() {
+                selectedType = DateRangerType.values[index];
+              });
+            },
+
+            children: DateRangerType.values
+                .map(
+                  (e) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
+                    child: Text(e.name.toUpperCase()),
+                  ),
+                )
+                .toList(),
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(

@@ -1,4 +1,9 @@
-## 1.0.1 - 18/7/2023
+## 1.0.2 - 18/7/2023
+
+* Navigate to next year on reach last month of current year
+* Update _intl_ to  ^0.19.0
+
+* ## 1.0.1 - 18/7/2023
 
 * Fixed small Overflow issues from last build
 

@@ -35,7 +35,17 @@ class _PrimaryPageState extends State<PrimaryPage> {
               var tabDate = DateTime(ranger.activeYear, value + 1);
               return Row(
                 children: [
-                  chevron(active: value > 0),
+                  chevron(
+                      active: tabDate.year >= ranger.minYear,
+                      onTap: () {
+                        if (value > 0) {
+                          ranger.tabController
+                              .animateTo(ranger.tabController.index + -1);
+                        } else {
+                          widget.onNewDate
+                              .call(tabDate.subtract(Duration(days: 1)));
+                        }
+                      }),
                   InkWell(
                     onTap: () async {
                       var newDate = await ranger.navKey.currentState!
@@ -55,7 +65,17 @@ class _PrimaryPageState extends State<PrimaryPage> {
                       ),
                     ),
                   ),
-                  chevron(left: false, active: value < 11)
+                  chevron(
+                      left: false,
+                      active: tabDate.year <= ranger.maxYear,
+                      onTap: () {
+                        if (value < 11) {
+                          ranger.tabController
+                              .animateTo(ranger.tabController.index + 1);
+                        } else {
+                          widget.onNewDate.call(tabDate.add(Duration(days: 31)));
+                        }
+                      })
                 ],
               );
             },
@@ -73,16 +93,14 @@ class _PrimaryPageState extends State<PrimaryPage> {
     );
   }
 
-  Widget chevron({bool left = true, bool active = true}) {
+  Widget chevron(
+      {bool left = true, bool active = true, required VoidCallback onTap}) {
     return Expanded(
       child: AnimatedOpacity(
         opacity: active ? 1 : 0.2,
         duration: Duration(milliseconds: 100),
         child: InkWell(
-          onTap: active
-              ? () => ranger.tabController
-                  .animateTo(ranger.tabController.index + (left ? -1 : 1))
-              : null,
+          onTap: active ? onTap : null,
           child: Padding(
             padding: const EdgeInsets.only(top: 24),
             child: Align(

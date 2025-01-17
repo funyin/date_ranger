@@ -1,6 +1,6 @@
 name: date_ranger
 description: A date picker for flutter apps to pick single dates and date ranges
-version: 1.0.1
+version: 1.0.2
 homepage: https://github.com/funyin/date_ranger
 
 environment:
@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  intl: ^0.18.1
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:
