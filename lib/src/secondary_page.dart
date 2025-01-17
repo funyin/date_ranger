@@ -1,23 +1,31 @@
 part of '../date_ranger.dart';
 
-class SecondaryPage extends StatelessWidget {
+class SecondaryPage extends StatefulWidget {
   final DateTime dateTime;
   static final String route = "secondary";
 
   SecondaryPage({Key? key, required this.dateTime}) : super(key: key);
 
-  late final pickedDate = ValueNotifier(dateTime);
-  late var years = List.generate(
+  @override
+  State<SecondaryPage> createState() => _SecondaryPageState();
+}
+
+class _SecondaryPageState extends State<SecondaryPage> {
+  late final pickedDate = ValueNotifier(widget.dateTime);
+
+  late final years = List.generate(
       ranger.maxYear - ranger.minYear + 1, (index) => ranger.minYear + index);
-  late var yearController = FixedExtentScrollController(
-      initialItem: years.indexWhere((element) => element == dateTime.year));
-  late var monthController =
-      FixedExtentScrollController(initialItem: dateTime.month - 1);
-  late InheritedRanger ranger;
+
+  late final yearController = FixedExtentScrollController(
+      initialItem: years.indexWhere((element) => element == widget.dateTime.year));
+
+  late final monthController =
+      FixedExtentScrollController(initialItem: widget.dateTime.month - 1);
+
+  late final InheritedRanger ranger = InheritedRanger.of(context);
 
   @override
   Widget build(BuildContext context) {
-    ranger = InheritedRanger.of(context);
     return ValueListenableBuilder<DateTime>(
       valueListenable: pickedDate,
       builder: (context, date, child) => Column(
